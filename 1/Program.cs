@@ -1,35 +1,104 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace _1
+namespace ConsoleApplication2
 {
-   
-     class A
+    class ClassA
+    {
+        protected List<double> myAL = new List<double>();
+
+
+        public List<double> MyAL
+        {
+            get { return myAL; }
+            set { myAL = value; }
+        }
+        public List<double> linearEquation(int a, int b)
+        {
+            if (a == 0)
+            {
+                throw new Exception("the equation does not exist!");
+            }
+            myAL.Add((double)-b / a);
+
+            return myAL;
+        }
+    }
+
+    class ClassB : ClassA
     {
 
-    }
-     class C:A
-    {
-       protected object first;
-        public C(object first)
+        protected double discriminant(int a, int b, int c)
         {
-            this.first = first;
+
+            return b * b - 4 * a * c;
+
         }
 
-    }
 
-     class B : C
-    {
-       protected object second;
-        public B(object first,object second):base(first)
+
+
+        public List<double> solve(int a, int b, int c)
         {
-            this.first = first;
-            this.second = second;
+
+            if (a == 0)
+                return linearEquation(b, c);
+            double d = this.discriminant(a, b, c);
+
+
+            if (d == 0)
+            //Корень один
+            {
+
+                myAL.Add((-b + Math.Sqrt(d)) / 2 * a);
+
+
+            }
+            else if (d > 0)
+            // два корня
+            {
+                myAL.Add((-b + Math.Sqrt(d)) / 2 * a);
+                myAL.Add((-b - Math.Sqrt(d)) / 2 * a);
+
+            }
+            else throw new Exception("D<0 no roots");
+
+            return myAL;
+
+
         }
-    }   
-    class program
-    {
-        object a = new A();
-        B b = new B(new C(a), new B(a, new C(a)));
+
+        class Program
+        {
+            static void Main(string[] args)
+            {
+
+
+
+
+                try
+                {
+                    ClassB b = new ClassB();
+                    List<double> result = b.solve(0, 0, 0);
+                    string s = "Roots: ";
+                    foreach (double el in result)
+                    {
+                        s += el + " ";
+                    }
+
+                    Console.WriteLine(s);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+                Console.ReadKey();
+            }
+        }
     }
-     
 }
+
